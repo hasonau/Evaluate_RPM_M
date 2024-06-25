@@ -7,34 +7,33 @@ using namespace std;
 
 class Solution {
 private:
-    stack<int> s;
-
+    std::stack<int> s;
 public:
-    int evalRPN(vector<string>& tokens) {
-        for (string s1 : tokens) {
+    int evalRPN(std::vector<std::string>& tokens) {
+        for (std::string token : tokens) {
             try {
-                int save = stoi(s1);
-                s.push(save);
-            } catch (const invalid_argument& e) {
-                char a = s1[0];
-                int save1 = s.top();
-                s.pop();
-                int save2 = s.top();
-                s.pop();
-                if (a == 43 || a == 42) {
-                    if (a == 43) {
-                        int save3 = save2 + save1;
-                        s.push(save3);
-                    } else {
-                        int save3 = save2 * save1;
-                        s.push(save3);
-                    }
-                } else if (a == 45) {
-                    int save3 = save2 - save1;
-                    s.push(save3);
-                } else {
-                    int save3 = save2 / save1;
-                    s.push(save3);
+                int num = std::stoi(token);
+                s.push(num);
+            } catch (const std::invalid_argument& e) {
+                char op = token[0];
+                int operand2 = s.top(); s.pop();
+                int operand1 = s.top(); s.pop();
+
+                switch (op) {
+                    case '+':
+                        s.push(operand1 + operand2);
+                        break;
+                    case '-':
+                        s.push(operand1 - operand2);
+                        break;
+                    case '*':
+                        s.push(operand1 * operand2);
+                        break;
+                    case '/':
+                        s.push(operand1 / operand2);
+                        break;
+                    default:
+                        throw std::invalid_argument("Invalid operator: " + token);
                 }
             }
         }
